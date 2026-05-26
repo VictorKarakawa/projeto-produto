@@ -1,0 +1,83 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build / distribuição
+dist/
+build/
+out/
+
+# Cache
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vite/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# IDEs e editores
+.vscode/
+.idea/
+
+# Arquivos temporários
+tmp/
+temp/
+
+# Cobertura de testes
+coverage/
+
+# Banco SQLite
+*.sqlite
+*.sqlite3
+
+# Arquivos do Expo / React Native
+.expo/
+.expo-shared/
+
+# Android / iOS
+android/.gradle/
+android/app/build/
+ios/Pods/
+
+# Oracle OCI / configs locais
+.oci/
+
+# Arquivos de chave
+*.pem
+*.key
+
+# Streamlit
+.streamlit/
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env/
+
+# Java
+target/
+*.class
+
+# NetBeans
+nbproject/private/
+
+# Arquivos do sistema operacional
+Desktop.ini

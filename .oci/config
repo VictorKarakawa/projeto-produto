@@ -1,0 +1,6 @@
+[DEFAULT]
+user=ocid1.user.oc1..aaaaaaaa6q46g2vtuugtsdyyxn2wb54nlmti4yejfyjd2ypdyoj342oremhq
+fingerprint=0b:bf:5c:31:8e:61:a9:ca:c2:27:b1:50:1c:c5:81:56
+tenancy=ocid1.tenancy.oc1..aaaaaaaaqzkeiybuxjd43f5t6gimvwxehg47fhsymgp53q3fimebwaepbqya
+region=sa-saopaulo-1
+key_file=.oci/victorhtkarakawa@unoeste.edu.br-2026-05-06T23_09_14.771Z.pem

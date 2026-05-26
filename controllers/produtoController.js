@@ -1,0 +1,206 @@
+const CategoriaModel = require("../models/categoriaModel");
+const MarcaModel = require("../models/marcaModel");
+const ProdutoModel = require("../models/produtoModel");
+
+const common = require("oci-common");
+const os = require("oci-objectstorage");
+
+const provider = new common.ConfigFileAuthenticationDetailsProvider(".oci/config", "DEFAULT");
+
+const client = new os.ObjectStorageClient({
+    authenticationDetailsProvider: provider
+});
+
+const namespaceName = "grpzmiwm6trw";
+const bucketName = "bucket-aula";
+
+class ProdutoController {
+
+    async enviarImagemBucket(file) {
+        const ext = file.originalname.split(".").pop().toLowerCase();
+        const nomeArquivo = Date.now().toString() + "." + ext;
+
+        await client.putObject({
+            namespaceName: namespaceName,
+            bucketName: bucketName,
+            objectName: nomeArquivo,
+            putObjectBody: file.buffer,
+            contentType: file.mimetype
+        });
+
+        return nomeArquivo;
+    }
+
+    async listarView(req, res) {
+        let prod = new ProdutoModel();
+        let lista = await prod.listarProdutos();
+        res.render('produto/listar', { lista: lista });
+    }
+
+    async buscaProduto(req, res) {
+        var ok = true;
+        var msg = "";
+        var retorno = null;
+
+        if (req.body.id != null && req.body.id != "") {
+            let prod = new ProdutoModel();
+            prod = await prod.buscarProduto(req.body.id);
+
+            retorno = {
+                nome: prod.produtoNome,
+                preco: prod.produtoPreco,
+                id: prod.produtoId,
+                marcaNome: prod.marcaNome,
+                categoriaNome: prod.categoriaNome,
+                imagem: prod.produtoImagem
+            };
+        }
+        else {
+            ok = false;
+            msg = "Parâmetro inválido!";
+        }
+
+        res.send({ ok: ok, msg: msg, retorno: retorno });
+    }
+
+    async excluirProduto(req, res) {
+        var ok = true;
+
+        if (req.body.codigo != "") {
+            let produto = new ProdutoModel();
+            ok = await produto.excluir(req.body.codigo);
+        }
+        else {
+            ok = false;
+        }
+
+        res.send({ ok: ok });
+    }
+
+    async cadastrarProduto(req, res) {
+        var ok = true;
+
+        if (
+            req.body.codigo != "" &&
+            req.body.nome != "" &&
+            req.body.quantidade != "" &&
+            req.body.quantidade != '0' &&
+            req.body.marca != '0' &&
+            req.body.categoria != '0' &&
+            req.file != null &&
+            (req.file.originalname.toLowerCase().includes(".jpg") || req.file.originalname.toLowerCase().includes(".png")) &&
+            req.body.preco != '' &&
+            req.body.preco > '0'
+        ) {
+            try {
+                const nomeImagem = await this.enviarImagemBucket(req.file);
+
+                let produto = new ProdutoModel(
+                    0,
+                    req.body.codigo,
+                    req.body.nome,
+                    req.body.quantidade,
+                    req.body.categoria,
+                    req.body.marca,
+                    "",
+                    "",
+                    nomeImagem,
+                    req.body.preco
+                );
+
+                ok = await produto.gravar();
+            }
+            catch (erro) {
+                console.error("Erro ao cadastrar produto:", erro);
+                ok = false;
+            }
+        }
+        else {
+            ok = false;
+        }
+
+        res.send({ ok: ok });
+    }
+
+    async alterarView(req, res) {
+        let produto = new ProdutoModel();
+        let marca = new MarcaModel();
+        let categoria = new CategoriaModel();
+
+        if (req.params.id != undefined && req.params.id != "") {
+            produto = await produto.buscarProduto(req.params.id);
+        }
+
+        let listaMarca = await marca.listarMarcas();
+        let listaCategoria = await categoria.listarCategorias();
+
+        res.render("produto/alterar", {
+            produtoAlter: produto,
+            listaMarcas: listaMarca,
+            listaCategorias: listaCategoria
+        });
+    }
+
+    async alterarProduto(req, res) {
+        var ok = true;
+
+        if (
+            req.body.codigo != "" &&
+            req.body.nome != "" &&
+            req.body.quantidade != "" &&
+            req.body.quantidade != '0' &&
+            req.body.marca != '0' &&
+            req.body.categoria != '0' &&
+            req.file != null &&
+            (req.file.originalname.toLowerCase().includes(".jpg") || req.file.originalname.toLowerCase().includes(".png")) &&
+            req.body.preco != '' &&
+            req.body.preco > '0'
+        ) {
+            try {
+                const nomeImagem = await this.enviarImagemBucket(req.file);
+
+                let produto = new ProdutoModel(
+                    req.body.id,
+                    req.body.codigo,
+                    req.body.nome,
+                    req.body.quantidade,
+                    req.body.categoria,
+                    req.body.marca,
+                    "",
+                    "",
+                    nomeImagem,
+                    req.body.preco
+                );
+
+                ok = await produto.gravar();
+            }
+            catch (erro) {
+                console.error("Erro ao alterar produto:", erro);
+                ok = false;
+            }
+        }
+        else {
+            ok = false;
+        }
+
+        res.send({ ok: ok });
+    }
+
+    async cadastroView(req, res) {
+        let listaMarcas = [];
+        let listaCategorias = [];
+
+        let marca = new MarcaModel();
+        listaMarcas = await marca.listarMarcas();
+
+        let categoria = new CategoriaModel();
+        listaCategorias = await categoria.listarCategorias();
+
+        res.render('produto/cadastro', {
+            listaMarcas: listaMarcas,
+            listaCategorias: listaCategorias
+        });
+    }
+}
+
+module.exports = ProdutoController;
