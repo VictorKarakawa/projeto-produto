@@ -39,6 +39,9 @@ jobs:
                 port: 22
                 #server é nome da nossa aplicação no PM2
                 script: |
-                    cd /home/ubuntu/sistema
-                    npm install
-                    pm2 restart app
+                  cd /home/ubuntu
+                  git clone https://github.com/VictorKarakawa/projeto-produto.git || true
+                  cd /home/ubuntu/projeto-produto
+                  git pull origin main
+                  npm install
+                  pm2 restart app || pm2 start app.js --name app
