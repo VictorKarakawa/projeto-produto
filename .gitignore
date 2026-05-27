@@ -3,10 +3,8 @@ node_modules/
 
 # Variáveis de ambiente
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # Logs
 logs
@@ -16,7 +14,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Build / distribuição
+# Build
 dist/
 build/
 out/
@@ -28,40 +26,32 @@ out/
 .nuxt/
 .vite/
 
-# Arquivos do sistema
-.DS_Store
-Thumbs.db
-
-# IDEs e editores
-.vscode/
-.idea/
+# Cobertura de testes
+coverage/
 
 # Arquivos temporários
 tmp/
 temp/
 
-# Cobertura de testes
-coverage/
+# Sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
 
-# Banco SQLite
-*.sqlite
-*.sqlite3
+# IDEs/Editores
+.vscode/
+.idea/
 
-# Arquivos do Expo / React Native
-.expo/
-.expo-shared/
+# PM2
+.pm2/
 
-# Android / iOS
-android/.gradle/
-android/app/build/
-ios/Pods/
-
-# Oracle OCI / configs locais
+# OCI
 .oci/
 
-# Arquivos de chave
+# Chaves e certificados
 *.pem
 *.key
+*.crt
 
 # Streamlit
 .streamlit/
@@ -70,7 +60,6 @@ ios/Pods/
 __pycache__/
 *.pyc
 venv/
-.env/
 
 # Java
 target/
@@ -79,5 +68,11 @@ target/
 # NetBeans
 nbproject/private/
 
-# Arquivos do sistema operacional
-Desktop.ini
+# Expo / React Native
+.expo/
+.expo-shared/
+
+# Android / iOS
+android/.gradle/
+android/app/build/
+ios/Pods/
