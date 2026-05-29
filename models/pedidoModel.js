@@ -19,22 +19,24 @@ class PedidoModel {
 
     }
 
-    async validarPedido(listaPedido) {
-        var listaErros = [];
-        var produto = new ProdutoModel();
-        if(listaPedido.length > 0){
-            for(var i = 0; i< listaPedido.length; i++){
-                var idProduto = listaPedido[i].id;
-                produto = await produto.buscarProduto(idProduto);
-                if(produto.produtoQuantidade < listaPedido[i].quantidade) {
-                    listaErros.push(produto.produtoNome);
-                }
-            }
+async validarPedido(listaPedido) {
+    let listaErros = [];
+
+    for(let i = 0; i < listaPedido.length; i++) {
+
+        let produtoModel = new ProdutoModel();
+        let produto = await produtoModel.buscarProduto(listaPedido[i].id);
+
+        if(produto == null) {
+            listaErros.push("Produto inválido ou não encontrado");
         }
-
-
-        return listaErros;
+        else if(parseInt(produto.produtoQuantidade) < parseInt(listaPedido[i].quantidade)) {
+            listaErros.push(produto.produtoNome);
+        }
     }
+
+    return listaErros;
+}
 
     async debitarQuantidade(produtoId, produtoQuantidade){
 

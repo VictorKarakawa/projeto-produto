@@ -10,10 +10,10 @@ class Database {
     constructor() {
 
         this.#conexao = mysql.createPool({
-            host: '127.0.0.1',
-            database: 'banco_acc',
-            user: 'root',
-            password: '',
+            host: '163.176.156.93',
+            database: 'ProjetoFinal',
+            user: 'victorhtkarakawa',
+            password: '@Verdadeiro18',
         });
         
     }

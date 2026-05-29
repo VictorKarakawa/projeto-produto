@@ -22,27 +22,41 @@ document.addEventListener('DOMContentLoaded', function() {
 })
 
 function gravarPedido() {
+
     let carrinho = localStorage.getItem('carrinho');
 
     if(carrinho != null && carrinho != ''){
+
+        let email = prompt("Digite seu e-mail para receber a confirmação do pedido:");
+
+        if(email == null || email == ""){
+            alert("E-mail obrigatório!");
+            return;
+        }
+
+        let listaCarrinho = JSON.parse(carrinho);
 
         fetch('/gravar-pedido', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: carrinho
+            body: JSON.stringify({
+                email: email,
+                itens: listaCarrinho
+            })
         })
         .then(r => {
             return r.json();
         })
         .then(function(r) {
+
             if(r.ok){
-                alert("Pedido gravado com sucesso");
-                //remove tudo do localStorage
-                //localStorage.clear();
-                //remove apenas uma chave com seu valor do local
+
+                alert("Pedido gravado com sucesso!");
+
                 localStorage.removeItem('carrinho');
+
                 document.getElementById("valorTotalCarrinho").innerHTML = "";
                 document.getElementById("corpoTabelaCarrinho").innerHTML = "";
                 document.getElementById("contadorCarrinho").innerText = 0;
@@ -52,7 +66,7 @@ function gravarPedido() {
             }
         })
         .catch(function(e) {
-
+            console.log(e);
         })
     }
     else{
